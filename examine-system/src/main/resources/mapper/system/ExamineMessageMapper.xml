@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.examine.system.mapper.ExamineMessageMapper">
+
+    <resultMap type="ExamineMessage" id="ExamineMessageResult">
+        <result property="id"    column="id"    />
+        <result property="messageTitle"    column="message_title"    />
+        <result property="messageContent"    column="message_content"    />
+        <result property="messageCreateby"    column="message_createby"    />
+        <result property="roleId"    column="role_id"    />
+        <result property="messageStatus"    column="message_status"    />
+        <result property="messageTime"    column="message_time"    />
+    </resultMap>
+
+    <sql id="selectExamineMessageVo">
+        select id, message_title, message_content, message_createby, role_id, message_status, message_time from examine_message
+    </sql>
+
+    <select id="selectExamineMessageList" parameterType="ExamineMessage" resultMap="ExamineMessageResult">
+        <include refid="selectExamineMessageVo"/>
+        <where>
+            <if test="messageTitle != null  and messageTitle != ''"> and message_title = #{messageTitle}</if>
+            <if test="messageContent != null  and messageContent != ''"> and message_content = #{messageContent}</if>
+            <if test="messageCreateby != null  and messageCreateby != ''"> and message_createby = #{messageCreateby}</if>
+            <if test="roleId != null  and roleId != ''"> and role_id = #{roleId}</if>
+            <if test="messageStatus != null "> and message_status = #{messageStatus}</if>
+            <if test="messageTime != null "> and message_time = #{messageTime}</if>
+        </where>
+    </select>
+
+    <select id="selectExamineMessageById" parameterType="Long" resultMap="ExamineMessageResult">
+        <include refid="selectExamineMessageVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertExamineMessage" parameterType="ExamineMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into examine_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="messageTitle != null">message_title,</if>
+            <if test="messageContent != null">message_content,</if>
+            <if test="messageCreateby != null">message_createby,</if>
+            <if test="roleId != null">role_id,</if>
+            <if test="messageStatus != null">message_status,</if>
+            <if test="messageTime != null">message_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="messageTitle != null">#{messageTitle},</if>
+            <if test="messageContent != null">#{messageContent},</if>
+            <if test="messageCreateby != null">#{messageCreateby},</if>
+            <if test="roleId != null">#{roleId},</if>
+            <if test="messageStatus != null">#{messageStatus},</if>
+            <if test="messageTime != null">#{messageTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateExamineMessage" parameterType="ExamineMessage">
+        update examine_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="messageTitle != null">message_title = #{messageTitle},</if>
+            <if test="messageContent != null">message_content = #{messageContent},</if>
+            <if test="messageCreateby != null">message_createby = #{messageCreateby},</if>
+            <if test="roleId != null">role_id = #{roleId},</if>
+            <if test="messageStatus != null">message_status = #{messageStatus},</if>
+            <if test="messageTime != null">message_time = #{messageTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteExamineMessageById" parameterType="Long">
+        delete from examine_message where id = #{id}
+    </delete>
+
+    <delete id="deleteExamineMessageByIds" parameterType="String">
+        delete from examine_message where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

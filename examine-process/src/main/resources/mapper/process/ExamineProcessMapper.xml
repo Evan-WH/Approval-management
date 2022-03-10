@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.examine.process.mapper.ExamineProcessMapper">
+    
+    <resultMap type="ExamineProcess" id="ExamineProcessResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="idcard"    column="idcard"    />
+        <result property="carnumber"    column="carnumber"    />
+        <result property="deptid"    column="deptid"    />
+        <result property="bvname"    column="bvname"    />
+        <result property="time"    column="time"    />
+        <result property="desc"    column="desc"    />
+    </resultMap>
+
+    <sql id="selectExamineProcessVo">
+        select id, name, idcard, carnumber, deptid, bvname, time, desc from examine_process
+    </sql>
+
+    <select id="selectExamineProcessList" parameterType="ExamineProcess" resultMap="ExamineProcessResult">
+        <include refid="selectExamineProcessVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="idcard != null "> and idcard = #{idcard}</if>
+            <if test="carnumber != null "> and carnumber = #{carnumber}</if>
+            <if test="deptid != null  and deptid != ''"> and deptid = #{deptid}</if>
+            <if test="bvname != null  and bvname != ''"> and bvname like concat('%', #{bvname}, '%')</if>
+            <if test="time != null "> and time = #{time}</if>
+            <if test="desc != null  and desc != ''"> and desc = #{desc}</if>
+        </where>
+    </select>
+    
+    <select id="selectExamineProcessById" parameterType="Long" resultMap="ExamineProcessResult">
+        <include refid="selectExamineProcessVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertExamineProcess" parameterType="ExamineProcess" useGeneratedKeys="true" keyProperty="id">
+        insert into examine_process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="idcard != null">idcard,</if>
+            <if test="carnumber != null">carnumber,</if>
+            <if test="deptid != null">deptid,</if>
+            <if test="bvname != null">bvname,</if>
+            <if test="time != null">time,</if>
+            <if test="desc != null">desc,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="idcard != null">#{idcard},</if>
+            <if test="carnumber != null">#{carnumber},</if>
+            <if test="deptid != null">#{deptid},</if>
+            <if test="bvname != null">#{bvname},</if>
+            <if test="time != null">#{time},</if>
+            <if test="desc != null">#{desc},</if>
+         </trim>
+    </insert>
+
+    <update id="updateExamineProcess" parameterType="ExamineProcess">
+        update examine_process
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="idcard != null">idcard = #{idcard},</if>
+            <if test="carnumber != null">carnumber = #{carnumber},</if>
+            <if test="deptid != null">deptid = #{deptid},</if>
+            <if test="bvname != null">bvname = #{bvname},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="desc != null">desc = #{desc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteExamineProcessById" parameterType="Long">
+        delete from examine_process where id = #{id}
+    </delete>
+
+    <delete id="deleteExamineProcessByIds" parameterType="String">
+        delete from examine_process where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

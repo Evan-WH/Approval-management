@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.examine.system.mapper.ExamineProcessMapper">
+
+    <resultMap type="ExamineProcess" id="ExamineProcessResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="idcard"    column="idcard"    />
+        <result property="carnumber"    column="carnumber"    />
+        <result property="deptid"    column="deptid"    />
+        <result property="bvname"    column="bvname"    />
+        <result property="begtime"    column="begtime"    />
+        <result property="endtime"    column="endtime"    />
+        <result property="descr"    column="descr"    />
+        <result property="status"    column="status"    />
+        <result property="userid"    column="userid"    />
+    </resultMap>
+
+    <sql id="selectExamineProcessVo">
+        select id, name, idcard, carnumber, deptid, bvname, begtime, descr, endtime,status,userid from examine_process
+    </sql>
+
+    <select id="selectExamineProcessList" parameterType="ExamineProcess" resultMap="ExamineProcessResult">
+        <include refid="selectExamineProcessVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="idcard != null "> and idcard = #{idcard}</if>
+            <if test="carnumber != null "> and carnumber = #{carnumber}</if>
+            <if test="deptid != null  and deptid != ''"> and deptid = #{deptid}</if>
+            <if test="bvname != null  and bvname != ''"> and bvname like concat('%', #{bvname}, '%')</if>
+            <if test="begtime != null "> and begtime = #{begtime}</if>
+            <if test="descr != null  and descr != ''"> and descr = #{descr}</if>
+            <if test="endtime != null "> and endtime = #{endtime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="userid != null "> and userid = #{userid}</if>
+        </where>
+    </select>
+
+    <select id="selectExamineProcessById" parameterType="Long" resultMap="ExamineProcessResult">
+        <include refid="selectExamineProcessVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertExamineProcess" parameterType="ExamineProcess" useGeneratedKeys="true" keyProperty="id">
+        insert into examine_process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="idcard != null">idcard,</if>
+            <if test="carnumber != null">carnumber,</if>
+            <if test="deptid != null">deptid,</if>
+            <if test="bvname != null">bvname,</if>
+            <if test="begtime != null">begtime,</if>
+            <if test="descr != null">descr,</if>
+            <if test="endtime != null">endtime,</if>
+            <if test="status != null">status,</if>
+            <if test="userid != null">userid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="idcard != null">#{idcard},</if>
+            <if test="carnumber != null">#{carnumber},</if>
+            <if test="deptid != null">#{deptid},</if>
+            <if test="bvname != null">#{bvname},</if>
+            <if test="begtime != null">#{begtime},</if>
+            <if test="descr != null">#{descr},</if>
+            <if test="endtime != null">#{endtime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="userid != null">#{userid},</if>
+        </trim>
+    </insert>
+
+    <update id="updateExamineProcess" parameterType="ExamineProcess">
+        update examine_process
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="idcard != null">idcard = #{idcard},</if>
+            <if test="carnumber != null">carnumber = #{carnumber},</if>
+            <if test="deptid != null">deptid = #{deptid},</if>
+            <if test="bvname != null">bvname = #{bvname},</if>
+            <if test="begtime != null">begtime = #{begtime},</if>
+            <if test="descr != null">descr = #{descr},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="userid != null">userid = #{userid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteExamineProcessById" parameterType="Long">
+        delete from examine_process where id = #{id}
+    </delete>
+
+    <delete id="deleteExamineProcessByIds" parameterType="String">
+        delete from examine_process where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
